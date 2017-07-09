@@ -31,10 +31,8 @@ public class main {
 
             keyMap.put(path.register(service,
                                         StandardWatchEventKinds.ENTRY_CREATE
-                    //                    ,
-                    //                    StandardWatchEventKinds.ENTRY_DELETE
-                    //                                ,
-//                    StandardWatchEventKinds.ENTRY_MODIFY
+                    //                  ,StandardWatchEventKinds.ENTRY_DELETE
+                    //                  ,StandardWatchEventKinds.ENTRY_MODIFY
             ), path);
 
             WatchKey watchKey;
@@ -48,9 +46,6 @@ public class main {
                     System.out.println(eventDir + " : " + kind + " : " + eventPath);
                     File f = new File(eventDir + "\\" + eventPath);
 
-//                    System.out.println("read"+f.canRead());
-//                    System.out.println("write"+f.canWrite());
-//                    System.out.println("exists"+f.exists());
                     boolean b;
                     do {
                         b = true;
@@ -64,7 +59,6 @@ public class main {
                             b = false;
                         }
                     } while (!b);
-//                    deletingFile(eventDir + "\\" + eventPath);
                 }
             } while (watchKey.reset());
         } catch (Exception e) {
@@ -78,14 +72,8 @@ public class main {
     private static void readingFile(String path) {
         // test
         String fileNameToTest;
-//        if (args.length > 0) {
-//            fileNameToTest = args[0];
-//            System.out.println("Using command-line argument for file name, " + fileNameToTest);
-//        } else {
-//	    fileNameToTest = "g:\\fileFromSystem2.txt";
         fileNameToTest = path;
         System.out.println("Using file name " + fileNameToTest);
-//        }
 
         try {
             File f = new File(fileNameToTest);
