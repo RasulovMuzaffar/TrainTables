@@ -13,6 +13,9 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 
 public class main {
 
@@ -30,9 +33,8 @@ public class main {
             Path path = Paths.get(p);
 
             keyMap.put(path.register(service,
-                                        StandardWatchEventKinds.ENTRY_CREATE
-                    //                  ,StandardWatchEventKinds.ENTRY_DELETE
-                    //                  ,StandardWatchEventKinds.ENTRY_MODIFY
+                    StandardWatchEventKinds.ENTRY_CREATE //                  ,StandardWatchEventKinds.ENTRY_DELETE
+            //                    , StandardWatchEventKinds.ENTRY_MODIFY
             ), path);
 
             WatchKey watchKey;
@@ -47,16 +49,24 @@ public class main {
                     File f = new File(eventDir + "\\" + eventPath);
 
                     boolean b;
+                    int i = 0;
                     do {
+                        Thread.sleep(1000);
+                        System.out.println("size " + f.length());
                         b = true;
                         try (FileInputStream fis = new FileInputStream(f)) {
-                            while (f.canRead() && f.canWrite() && f.exists()) {
+                            System.out.println("Файл обрабатывается!");
                                 readingFile(eventDir + "\\" + eventPath);
                                 break;
-                            }
                         } catch (IOException ex) {
-                            System.out.println("Файл занят " + ex);
-                            b = false;
+                            i++;
+                            if (i < 10) {
+                                System.out.println("Файл занят " + ex);
+                                b = false;
+                            } else {
+                                System.out.println("Повторите попытку позже, т.к. " + ex.getMessage());
+                                break;
+                            }
                         }
                     } while (!b);
                 }
